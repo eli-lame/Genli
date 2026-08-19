@@ -837,7 +837,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Genli:uctronic_buck_converter"
+		(symbol "Genli:buck_input"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -853,8 +853,121 @@
 					)
 				)
 			)
-			(property "Value" "BUCK_5V"
+			(property "Value" ""
 				(at -9.398 0.254 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "buck_input_0_1"
+				(rectangle
+					(start -10.4775 5.08)
+					(end 2.8575 -5.08)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "buck_input_1_1"
+				(pin power_in line
+					(at -8.89 3.81 0)
+					(length 2.54)
+					(name "VIN+"
+						(effects
+							(font
+								(size 0.7874 0.7874)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 0.7874 0.7874)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at -8.89 -3.81 0)
+					(length 2.54)
+					(name "VIN-"
+						(effects
+							(font
+								(size 0.7874 0.7874)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 0.7874 0.7874)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "Genli:buck_output"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" ""
+				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -896,10 +1009,10 @@
 					)
 				)
 			)
-			(symbol "uctronic_buck_converter_0_1"
+			(symbol "buck_output_0_1"
 				(rectangle
-					(start -4.445 12.3031)
-					(end 4.445 -12.3031)
+					(start -1.27 5.08)
+					(end 12.065 -5.08)
 					(stroke
 						(width 0)
 						(type default)
@@ -909,75 +1022,39 @@
 					)
 				)
 			)
-			(symbol "uctronic_buck_converter_1_1"
-				(pin power_in line
-					(at -2.54 11.43 90)
+			(symbol "buck_output_1_1"
+				(pin power_out line
+					(at 11.43 2.54 180)
 					(length 2.54)
-					(name "VIN+"
+					(name "5V"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 0.7874 0.7874)
 							)
 						)
 					)
 					(number "1"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 0.7874 0.7874)
 							)
 						)
 					)
 				)
-				(pin power_in line
-					(at 2.54 11.43 90)
+				(pin power_out line
+					(at 11.43 -2.54 180)
 					(length 2.54)
-					(name "VIN-"
+					(name "GND"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 0.7874 0.7874)
 							)
 						)
 					)
 					(number "2"
 						(effects
 							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at -2.54 -11.43 270)
-					(length 2.54)
-					(name "5V"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 2.54 -11.43 270)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
+								(size 0.7874 0.7874)
 							)
 						)
 					)
@@ -2066,13 +2143,13 @@
 	)
 	(wire
 		(pts
-			(xy 120.65 41.91) (xy 118.11 41.91)
+			(xy 129.54 48.26) (xy 129.54 33.02)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "0945385e-0383-46be-9f87-e5535caa889b")
+		(uuid "0aea418c-6b5d-4c91-881b-fa7c6b5d9022")
 	)
 	(wire
 		(pts
@@ -2146,6 +2223,16 @@
 	)
 	(wire
 		(pts
+			(xy 88.9 31.75) (xy 96.52 31.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2ce8d259-f4ba-4f34-a0ed-64b1fcce9161")
+	)
+	(wire
+		(pts
 			(xy 39.37 85.09) (xy 44.45 85.09)
 		)
 		(stroke
@@ -2166,17 +2253,7 @@
 	)
 	(wire
 		(pts
-			(xy 118.11 36.83) (xy 121.92 36.83)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "30ac86e1-3ded-48ab-892c-d4b51eeeeca7")
-	)
-	(wire
-		(pts
-			(xy 121.92 50.8) (xy 83.82 50.8)
+			(xy 83.82 50.8) (xy 127 50.8)
 		)
 		(stroke
 			(width 0)
@@ -2206,16 +2283,6 @@
 	)
 	(wire
 		(pts
-			(xy 121.92 36.83) (xy 121.92 50.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3e57dcc2-d63f-469b-bdb3-71c3d0b70511")
-	)
-	(wire
-		(pts
 			(xy 171.45 76.2) (xy 187.96 76.2)
 		)
 		(stroke
@@ -2236,6 +2303,16 @@
 	)
 	(wire
 		(pts
+			(xy 88.9 39.37) (xy 96.52 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "447fca6e-d21a-49b6-9a92-53a3213369e2")
+	)
+	(wire
+		(pts
 			(xy 39.37 72.39) (xy 44.45 72.39)
 		)
 		(stroke
@@ -2243,16 +2320,6 @@
 			(type default)
 		)
 		(uuid "46b4af70-e746-479b-89da-3901b63853a8")
-	)
-	(wire
-		(pts
-			(xy 69.85 36.83) (xy 95.25 36.83)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "482f93df-326b-43e1-a7b3-470284980831")
 	)
 	(wire
 		(pts
@@ -2283,6 +2350,16 @@
 			(type default)
 		)
 		(uuid "56125edd-3166-489e-b0c8-04cfb55882b7")
+	)
+	(wire
+		(pts
+			(xy 129.54 33.02) (xy 127 33.02)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5b583f8d-a9ea-4e8f-aae0-bf9eff5fe901")
 	)
 	(wire
 		(pts
@@ -2376,7 +2453,7 @@
 	)
 	(wire
 		(pts
-			(xy 44.45 48.26) (xy 120.65 48.26)
+			(xy 44.45 48.26) (xy 129.54 48.26)
 		)
 		(stroke
 			(width 0)
@@ -2413,16 +2490,6 @@
 			(type default)
 		)
 		(uuid "a0912cfc-47f1-47bc-b668-3e078332374e")
-	)
-	(wire
-		(pts
-			(xy 69.85 41.91) (xy 95.25 41.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a286acf5-65d2-4259-a6b6-46f3a2e0a7d4")
 	)
 	(wire
 		(pts
@@ -2523,16 +2590,6 @@
 			(type default)
 		)
 		(uuid "cb9043ce-4f99-4b31-825e-737708ad79fd")
-	)
-	(wire
-		(pts
-			(xy 120.65 48.26) (xy 120.65 41.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cc9c35ce-40ba-44b1-a180-7960c664db9b")
 	)
 	(wire
 		(pts
@@ -2656,6 +2713,16 @@
 	)
 	(wire
 		(pts
+			(xy 127 50.8) (xy 127 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f978745b-ca13-4448-a8e8-2ca084858ec9")
+	)
+	(wire
+		(pts
 			(xy 106.68 102.87) (xy 110.49 102.87)
 		)
 		(stroke
@@ -2753,16 +2820,6 @@
 			(justify left bottom)
 		)
 		(uuid "37478a1c-58d4-47a0-ad66-279b1b0bbd63")
-	)
-	(label "GND"
-		(at 69.85 36.83 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "3812f570-c06b-41c8-9688-0d1a9cd0de67")
 	)
 	(label "VBAT"
 		(at 220.98 101.6 0)
@@ -2914,15 +2971,15 @@
 		)
 		(uuid "7222a344-96f7-4383-8194-cbae9ff4111a")
 	)
-	(label "VBAT"
-		(at 69.85 41.91 0)
+	(label "GND"
+		(at 88.9 39.37 180)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left bottom)
+			(justify right bottom)
 		)
-		(uuid "8b38c4b5-8e7e-49e6-854c-eb8d44d0cd48")
+		(uuid "7f02f709-d87b-4467-953d-c55aa61d161e")
 	)
 	(label "ESC4_SIG"
 		(at 219.71 111.76 0)
@@ -3094,6 +3151,16 @@
 		)
 		(uuid "d2e58e93-bc4e-4cd8-8e71-855eb5150b60")
 	)
+	(label "VBAT"
+		(at 88.9 31.75 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "d84f4857-c1fc-44b7-bc2b-0f1f7965eeb3")
+	)
 	(label "ESC3_SIG"
 		(at 220.98 77.47 0)
 		(effects
@@ -3216,7 +3283,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "PCM_SparkFun-Connector:ScrewTerminal_1x02_P5.0mm"
 			(at 246.38 109.22 0)
 			(hide yes)
 			(show_name no)
@@ -3265,92 +3332,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Genli:uctronic_buck_converter")
-		(at 106.68 39.37 90)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "2edeaeac-a43c-494d-aaca-f03526f8deb3")
-		(property "Reference" "U9"
-			(at 106.68 30.48 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "BUCK_5V"
-			(at 106.68 33.02 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 106.68 39.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 106.68 39.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 106.68 39.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "3"
-			(uuid "7ae2049d-f4b2-4a9d-b921-4de4ef107dfc")
-		)
-		(pin "1"
-			(uuid "eb9e945e-9d68-4f35-9013-ac48bd805e79")
-		)
-		(pin "2"
-			(uuid "c2963dd3-38a9-44d3-bd8a-bb9d03f20c9a")
-		)
-		(pin "4"
-			(uuid "9fe3dcfc-9561-4cec-9d56-c29e62a7c2a9")
-		)
-		(instances
-			(project "Genli"
-				(path "/ab1ba344-0bbc-4d03-a791-b040cd8e0018"
-					(reference "U9")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Genli:ESC_30A_SIGNAL")
 		(at 177.8 88.9 0)
 		(unit 1)
@@ -3383,7 +3364,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 			(at 177.8 88.9 0)
 			(hide yes)
 			(show_name no)
@@ -3463,7 +3444,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ESP32_30pin"
+		(property "Footprint" "PCM_SparkFun-RF:ESP32-WROOM-32D-DFM_PASTE"
 			(at 55.88 80.01 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3627,7 +3608,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "PCM_SparkFun-Connector:ScrewTerminal_1x02_P5.0mm"
 			(at 247.65 74.93 0)
 			(hide yes)
 			(show_name no)
@@ -3708,7 +3689,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 			(at 177.8 120.65 0)
 			(hide yes)
 			(show_name no)
@@ -3793,7 +3774,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical"
 			(at 106.68 71.12 0)
 			(hide yes)
 			(show_name no)
@@ -3890,7 +3871,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical"
 			(at 140.97 71.12 0)
 			(hide yes)
 			(show_name no)
@@ -3982,7 +3963,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "PCM_SparkFun-Connector:ScrewTerminal_1x02_P5.0mm"
 			(at 196.85 110.49 0)
 			(hide yes)
 			(show_name no)
@@ -4063,7 +4044,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 			(at 228.6 85.09 0)
 			(hide yes)
 			(show_name no)
@@ -4146,7 +4127,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "HopCopter:SEN-15335"
 			(at 118.11 101.6 0)
 			(hide yes)
 			(show_name no)
@@ -4256,7 +4237,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "PCM_SparkFun-Connector:ScrewTerminal_1x02_P5.0mm"
 			(at 196.85 78.74 0)
 			(hide yes)
 			(show_name no)
@@ -4305,6 +4286,88 @@
 		)
 	)
 	(symbol
+		(lib_id "Genli:buck_input")
+		(at 105.41 35.56 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d0060278-7bf5-4418-b8dc-ade7d64a936b")
+		(property "Reference" "U9"
+			(at 109.22 35.5599 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" ""
+			(at 96.012 35.306 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "PCM_SparkFun-Connector:ScrewTerminal_1x02_P5.0mm"
+			(at 105.41 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 105.41 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 105.41 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "068b02c3-fdc8-4019-bb60-801aeb5795e3")
+		)
+		(pin "2"
+			(uuid "03b43437-e64a-43f3-be49-e28aeb5cc3c1")
+		)
+		(instances
+			(project "Genli"
+				(path "/ab1ba344-0bbc-4d03-a791-b040cd8e0018"
+					(reference "U9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Genli:battery_conn")
 		(at 185.42 30.48 90)
 		(unit 1)
@@ -4337,7 +4400,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_AMASS:AMASS_XT60-F_1x02_P7.20mm_Vertical"
 			(at 185.42 30.48 0)
 			(hide yes)
 			(show_name no)
@@ -4386,6 +4449,86 @@
 		)
 	)
 	(symbol
+		(lib_id "Genli:buck_output")
+		(at 115.57 35.56 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f96c697c-6ea8-45c8-b8a8-9b225c8ff4d2")
+		(property "Reference" "U15"
+			(at 120.9675 27.94 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" ""
+			(at 115.57 35.56 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "PCM_SparkFun-Connector:ScrewTerminal_1x02_P5.0mm"
+			(at 115.57 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 115.57 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 115.57 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "1494831d-59cd-49c6-bdee-f7d31d8f5e91")
+		)
+		(pin "1"
+			(uuid "df35628b-ff0e-468a-9072-9feb268b478a")
+		)
+		(instances
+			(project "Genli"
+				(path "/ab1ba344-0bbc-4d03-a791-b040cd8e0018"
+					(reference "U15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Genli:ESC_30A_SIGNAL")
 		(at 227.33 119.38 0)
 		(unit 1)
@@ -4418,7 +4561,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 			(at 227.33 119.38 0)
 			(hide yes)
 			(show_name no)
