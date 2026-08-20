@@ -5,6 +5,212 @@
 	(uuid "ab1ba344-0bbc-4d03-a791-b040cd8e0018")
 	(paper "A4")
 	(lib_symbols
+		(symbol "Connector:Screw_Terminal_01x02"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "J"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Screw_Terminal_01x02"
+				(at 0 -5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "screw terminal"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "TerminalBlock*:*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "Screw_Terminal_01x02_1_1"
+				(rectangle
+					(start -1.27 1.27)
+					(end 1.27 -3.81)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.5334 0.3302) (xy 0.3302 -0.508)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.5334 -2.2098) (xy 0.3302 -3.048)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.3556 0.508) (xy 0.508 -0.3302)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.3556 -2.032) (xy 0.508 -2.8702)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 0)
+					(radius 0.635)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 -2.54)
+					(radius 0.635)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Genli:ESC_30A_Power"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -801,14 +1007,14 @@
 				(pin power_out line
 					(at -3.81 8.89 270)
 					(length 3.81)
-					(name "1"
+					(name "BAT+"
 						(effects
 							(font
 								(size 1.27 1.27)
 							)
 						)
 					)
-					(number "BAT+"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -819,14 +1025,14 @@
 				(pin power_out line
 					(at 3.81 8.89 270)
 					(length 3.81)
-					(name "2"
+					(name "BAT-"
 						(effects
 							(font
 								(size 1.27 1.27)
 							)
 						)
 					)
-					(number "BAT-"
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2009,7 +2215,7 @@
 	)
 	(text "Battery\n"
 		(exclude_from_sim no)
-		(at 185.166 18.542 0)
+		(at 201.168 20.828 0)
 		(effects
 			(font
 				(size 2.54 2.54)
@@ -2026,6 +2232,16 @@
 			)
 		)
 		(uuid "c44ffe50-a0c0-47eb-bec6-6d63ad01ebe0")
+	)
+	(text "switch goes here"
+		(exclude_from_sim no)
+		(at 186.69 51.054 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "d6b5d737-30e1-443b-9346-b557f6202f82")
 	)
 	(no_connect
 		(at 72.39 90.17)
@@ -2343,6 +2559,16 @@
 	)
 	(wire
 		(pts
+			(xy 165.1 34.29) (xy 176.53 34.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "52397c44-20c0-47e8-a382-d46d656d205f")
+	)
+	(wire
+		(pts
 			(xy 220.98 77.47) (xy 220.98 81.28)
 		)
 		(stroke
@@ -2423,6 +2649,16 @@
 	)
 	(wire
 		(pts
+			(xy 185.42 40.64) (xy 176.53 40.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "75696a76-60d5-4bea-ac3b-4ad1bf5eb0d5")
+	)
+	(wire
+		(pts
 			(xy 220.98 106.68) (xy 237.49 106.68)
 		)
 		(stroke
@@ -2433,7 +2669,7 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 26.67) (xy 176.53 26.67)
+			(xy 170.18 26.67) (xy 233.68 26.67)
 		)
 		(stroke
 			(width 0)
@@ -2523,6 +2759,16 @@
 	)
 	(wire
 		(pts
+			(xy 187.96 40.64) (xy 201.93 40.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bb154a7b-069f-4fbf-99aa-ea917352dd82")
+	)
+	(wire
+		(pts
 			(xy 99.06 78.74) (xy 102.87 78.74)
 		)
 		(stroke
@@ -2530,6 +2776,16 @@
 			(type default)
 		)
 		(uuid "bba64034-30c3-4587-8326-c5e302bc018f")
+	)
+	(wire
+		(pts
+			(xy 201.93 34.29) (xy 233.68 34.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bd43ecd9-dc63-4153-bf1b-16b22bf72d96")
 	)
 	(wire
 		(pts
@@ -2603,13 +2859,13 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 34.29) (xy 176.53 34.29)
+			(xy 201.93 40.64) (xy 201.93 34.29)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "dc4a3960-cea8-4508-9e83-cc6c00d5f297")
+		(uuid "d6fc208a-10a7-43c0-8bf5-caa4167ae228")
 	)
 	(wire
 		(pts
@@ -2740,6 +2996,16 @@
 			(type default)
 		)
 		(uuid "fe899ba2-dd24-44fe-bf4d-f9f527be3fd1")
+	)
+	(wire
+		(pts
+			(xy 176.53 40.64) (xy 176.53 34.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ff33909d-ed71-4a67-8fa9-8ded5db85bbf")
 	)
 	(label "GND"
 		(at 106.68 105.41 180)
@@ -2932,7 +3198,7 @@
 		(uuid "64498cba-50b4-4203-a280-985f91a89a13")
 	)
 	(label "VBAT"
-		(at 170.18 34.29 180)
+		(at 165.1 34.29 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3332,6 +3598,87 @@
 		)
 	)
 	(symbol
+		(lib_id "Genli:battery_conn")
+		(at 242.57 30.48 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "14865f9a-50e2-4ac7-96f4-167c465fd371")
+		(property "Reference" "U8"
+			(at 252.73 30.4799 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" ""
+			(at 242.57 30.48 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_AMASS:AMASS_XT60PW-F_1x02_P7.20mm_Horizontal"
+			(at 242.57 30.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 242.57 30.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 242.57 30.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "edc83fd9-e8b5-44d6-9347-c17ff1135503")
+		)
+		(pin "2"
+			(uuid "790cf0c1-d64c-4f36-947d-f1b29f2985d0")
+		)
+		(instances
+			(project "Genli"
+				(path "/ab1ba344-0bbc-4d03-a791-b040cd8e0018"
+					(reference "U8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Genli:ESC_30A_SIGNAL")
 		(at 177.8 88.9 0)
 		(unit 1)
@@ -3444,7 +3791,7 @@
 				)
 			)
 		)
-		(property "Footprint" "PCM_SparkFun-RF:ESP32-WROOM-32D-DFM_PASTE"
+		(property "Footprint" "ESP32_Footprints:ESP32_30pin"
 			(at 55.88 80.01 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4286,6 +4633,88 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Screw_Terminal_01x02")
+		(at 187.96 45.72 270)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "bd424d92-90bd-4741-834f-def55e1c50dd")
+		(property "Reference" "J1"
+			(at 190.5 44.4499 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Screw_Terminal_01x02"
+			(at 190.5 46.9899 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "PCM_SparkFun-Connector:ScrewTerminal_1x02_P5.0mm"
+			(at 187.96 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 187.96 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 187.96 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "28831415-5a92-42c3-9f50-996287b2c7db")
+		)
+		(pin "1"
+			(uuid "e3ddb761-380d-44dc-9a52-b8229cd8e3ec")
+		)
+		(instances
+			(project "Genli"
+				(path "/ab1ba344-0bbc-4d03-a791-b040cd8e0018"
+					(reference "J1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Genli:buck_input")
 		(at 105.41 35.56 0)
 		(unit 1)
@@ -4362,87 +4791,6 @@
 			(project "Genli"
 				(path "/ab1ba344-0bbc-4d03-a791-b040cd8e0018"
 					(reference "U9")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Genli:battery_conn")
-		(at 185.42 30.48 90)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "dae639b7-8938-4a11-87ba-b7f9aa38a35e")
-		(property "Reference" "U8"
-			(at 195.58 30.4799 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" ""
-			(at 185.42 30.48 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_AMASS:AMASS_XT60-F_1x02_P7.20mm_Vertical"
-			(at 185.42 30.48 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 185.42 30.48 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 185.42 30.48 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "BAT+"
-			(uuid "2981c6d1-5be2-4b71-a8ef-47df8aaa82f9")
-		)
-		(pin "BAT-"
-			(uuid "bb65d23e-3ad0-4fd0-8a6d-d74d5313dc76")
-		)
-		(instances
-			(project "Genli"
-				(path "/ab1ba344-0bbc-4d03-a791-b040cd8e0018"
-					(reference "U8")
 					(unit 1)
 				)
 			)
