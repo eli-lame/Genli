@@ -2248,10 +2248,6 @@
 		(uuid "070d5604-af2c-4d78-907e-84e399670a48")
 	)
 	(no_connect
-		(at 44.45 64.77)
-		(uuid "0c2002b2-e16c-441e-bc3a-df66a6c3f328")
-	)
-	(no_connect
 		(at 125.73 105.41)
 		(uuid "113d2551-67fb-4aa4-8c26-dab644652f21")
 	)
@@ -2298,6 +2294,10 @@
 	(no_connect
 		(at 44.45 97.79)
 		(uuid "853eb29a-3b80-443c-a3ea-9e687ca254e6")
+	)
+	(no_connect
+		(at 44.45 64.77)
+		(uuid "85d87398-ab22-4c74-8498-ffaa2d510a02")
 	)
 	(no_connect
 		(at 137.16 76.2)
@@ -2379,16 +2379,6 @@
 	)
 	(wire
 		(pts
-			(xy 83.82 64.77) (xy 72.39 64.77)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "22d1a347-45f7-4fab-98c2-f05a2d959f1d")
-	)
-	(wire
-		(pts
 			(xy 171.45 71.12) (xy 187.96 71.12)
 		)
 		(stroke
@@ -2466,16 +2456,6 @@
 			(type default)
 		)
 		(uuid "300b19d8-1dc8-4fd0-bc61-cc035d6569dd")
-	)
-	(wire
-		(pts
-			(xy 83.82 50.8) (xy 127 50.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3308c2be-d976-4beb-b5d2-c10d89525651")
 	)
 	(wire
 		(pts
@@ -2589,6 +2569,16 @@
 	)
 	(wire
 		(pts
+			(xy 72.39 50.8) (xy 72.39 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5fe6d443-9377-4b08-a0cd-3e9590bc9832")
+	)
+	(wire
+		(pts
 			(xy 222.25 72.39) (xy 238.76 72.39)
 		)
 		(stroke
@@ -2596,16 +2586,6 @@
 			(type default)
 		)
 		(uuid "600bffc5-851d-4c74-8978-d32f4e15db72")
-	)
-	(wire
-		(pts
-			(xy 83.82 50.8) (xy 83.82 64.77)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6041a409-8196-4e9e-8188-d291ba153d18")
 	)
 	(wire
 		(pts
@@ -2686,6 +2666,16 @@
 			(type default)
 		)
 		(uuid "8c164ccf-29c9-4834-8b28-670b068f543a")
+	)
+	(wire
+		(pts
+			(xy 127 38.1) (xy 127 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "904844f3-4099-433e-b2b4-3715ebba5493")
 	)
 	(wire
 		(pts
@@ -2969,13 +2959,13 @@
 	)
 	(wire
 		(pts
-			(xy 127 50.8) (xy 127 38.1)
+			(xy 127 50.8) (xy 72.39 50.8)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "f978745b-ca13-4448-a8e8-2ca084858ec9")
+		(uuid "f77fdfa4-f6fc-48ac-9c94-c411a4835619")
 	)
 	(wire
 		(pts
@@ -3549,7 +3539,7 @@
 				)
 			)
 		)
-		(property "Footprint" "PCM_SparkFun-Connector:ScrewTerminal_1x02_P5.0mm"
+		(property "Footprint" "HopCopter:ESC_Power_SolderPads_1x02"
 			(at 246.38 109.22 0)
 			(hide yes)
 			(show_name no)
@@ -3955,7 +3945,7 @@
 				)
 			)
 		)
-		(property "Footprint" "PCM_SparkFun-Connector:ScrewTerminal_1x02_P5.0mm"
+		(property "Footprint" "HopCopter:ESC_Power_SolderPads_1x02"
 			(at 247.65 74.93 0)
 			(hide yes)
 			(show_name no)
@@ -4310,7 +4300,7 @@
 				)
 			)
 		)
-		(property "Footprint" "PCM_SparkFun-Connector:ScrewTerminal_1x02_P5.0mm"
+		(property "Footprint" "HopCopter:ESC_Power_SolderPads_1x02"
 			(at 196.85 110.49 0)
 			(hide yes)
 			(show_name no)
@@ -4584,7 +4574,7 @@
 				)
 			)
 		)
-		(property "Footprint" "PCM_SparkFun-Connector:ScrewTerminal_1x02_P5.0mm"
+		(property "Footprint" "HopCopter:ESC_Power_SolderPads_1x02"
 			(at 196.85 78.74 0)
 			(hide yes)
 			(show_name no)
