@@ -3,6 +3,12 @@
 *.bak
 ~*
 *.lck
+*.kicad_prl
+*.net
+fp-info-cache
+
+# VS Code local-history extension
+.history/
 
 # OS files
 Thumbs.db
