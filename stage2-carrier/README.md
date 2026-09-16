@@ -5,9 +5,9 @@ using only parts that already work, so that the thing being learned is the PCB
 pipeline and nothing else. No bare chips, no fine pitch, nothing that cannot be
 reworked with an iron.
 
-Context and rationale: [hardware_roadmap.md](../../docs/hardware_roadmap.md).
-Pin map source of truth: [hardware.md](../../docs/hardware.md). Build tasks:
-`[H.5]`–`[H.10]` in [current_devtasks.md](../../docs/current_devtasks.md).
+Context and rationale: [hardware_roadmap.md](https://github.com/eli-lame/Revali/blob/main/docs/hardware_roadmap.md).
+Pin map source of truth: [hardware.md](https://github.com/eli-lame/Revali/blob/main/docs/hardware.md). Build tasks:
+`[H.5]`–`[H.10]` in [current_devtasks.md](https://github.com/eli-lame/Revali/blob/main/docs/current_devtasks.md).
 
 **Deliberately not on this board:** motor current, the ToF sensors themselves
 (they mount out at the frame — the estimator needs the baseline), and ELRS
@@ -65,7 +65,7 @@ single highest-value check in the whole process.
 | `J5` | JST-SH 1.0 mm, 5-pin | ToF B (rear-right) |
 | `J6` | JST-SH 1.0 mm, 4-pin | **ELRS / CRSF — reserved, unpopulated** |
 | `J7` | 1×2 header, 2.54 mm | Buzzer |
-| `J8` | 1×2 header, 2.54 mm | FC power switch — optional, see below |
+| `J8` | 1×2 header, 2.54 mm | FC power switch on `U1 SHDN` — optional, see below |
 
 ### J1 — ESC ribbon (KO50A)
 
@@ -91,9 +91,12 @@ schematic got this backwards; do not assume.
 ## Power
 
 ```
-J1.2 BAT ──┬── D1 (TVS) ──┬── C1 ──┬── [J8 switch] ──┬── U1 VIN ── U1 VOUT ── +5V
-           │              │        │                 │
-          GND            GND      GND                └── R1 ── divider ── GPIO 34
+J1.2 BAT ──┬── F1 ──┬── D1 (TVS) ──┬── C1 ──┬── U1 VIN ── U1 VOUT ── +5V
+           │        │              │        │
+          GND      GND            GND       └── R1 ── divider ── GPIO 34
+
+  U1 SHDN ── J8 ── GND        close to shut the regulator down
+  U1 PG   ── test point       open drain, needs a pull-up to be read
 
   +5V ──┬── devkit VIN ── (devkit AMS1117) ── +3V3 ── IMU, ToF ×2
         ├── J6.1 (ELRS, reserved)
@@ -103,7 +106,7 @@ J1.2 BAT ──┬── D1 (TVS) ──┬── C1 ──┬── [J8 switch]
 
 | Ref | Part | Notes |
 |---|---|---|
-| `U1` | Pololu D24V10F5 | 5.1–36 V in, 5 V @ 1 A. Solder **flat** through the 3 pads, not into headers — a socketed module works loose under impact. Stake with epoxy |
+| `U1` | Pololu D24V10F5 | 5.1–36 V in, 5 V @ 1 A. **Five pins** — `VIN`, `GND`, `VOUT`, `SHDN`, `PG` at 0.1″ spacing. Board is 18 × 13 × 3.5 mm with no mounting holes. Solder **flat** through the pads, not into headers — a socketed module works loose under impact. Stake with epoxy |
 | `D1` | SMBJ20A TVS | 20 V standoff (clear of 16.8 V full charge), ~32 V clamp — under the Pololu's 36 V limit. **4 S only**; 6 S would sit above the standoff voltage |
 | `C1` | 100 µF 35 V low-ESR electrolytic | Pololu's own docs warn that leads longer than a few inches create an LC spike at power-up that can exceed the module's rating. The ribbon plus trace run qualifies. Add `C2` 100 nF ceramic beside it |
 | `C3` | 10 µF + 100 nF on `+5V` | |
@@ -111,6 +114,32 @@ J1.2 BAT ──┬── D1 (TVS) ──┬── C1 ──┬── [J8 switch]
 
 Nothing else connects to `BAT`. It is 16.8 V at full charge and **must never
 reach the devkit's `VIN` pin**, whose AMS1117 is rated to roughly 15 V.
+
+### The regulator's own symbol and footprint
+
+There is no stock KiCad symbol, and a community one is not worth trusting for a
+part this simple. Build it from Pololu's own **Resources** on the
+[product page](https://www.pololu.com/product/2831): the dimension diagram
+gives the pad positions and the pin order as silkscreened, the drill guide
+prints 1:1 as a physical check, and the STEP model drops into the footprint's
+3D view for stack clearance.
+
+**Read the pin order off the dimension diagram, not from memory** — the labels
+are printed on the *back* of the module. Symbol pin numbers must equal footprint
+pad numbers; the names are only labels.
+
+| Pin | Electrical type | Why |
+|---|---|---|
+| `VIN` | Power input | |
+| `GND` | Power input | KiCad's convention for a module's ground |
+| `VOUT` | **Power output** | Makes it the driver of the `+5V` net, which is what stops ERC complaining that `+5V` has no source |
+| `SHDN` | Input | Control input |
+| `PG` | Open collector | Open drain; needs a pull-up wherever it is read |
+
+Because `BAT` and `GND` arrive from a connector, whose pins are passive, ERC
+will report *"power input pin not driven by any power output"* on those nets.
+That is expected — drop a **`PWR_FLAG`** on `BAT` and on `GND` to tell ERC they
+are externally sourced.
 
 ### Battery divider — GPIO 34
 
@@ -124,7 +153,7 @@ BAT ──[ R1 100 kΩ 1% ]──┬──[ R2 22 kΩ 1% ]── GND
 for the ADC's nonlinearity near the rail. Quiescent draw ~138 µA. Use 1 %
 resistors — divider accuracy sets voltage accuracy directly, and this is the
 number `warn_voltage` / `land_voltage` / `critical_voltage` in
-[safety.md](../../docs/safety.md) are checked against. Calibrate against a
+[safety.md](https://github.com/eli-lame/Revali/blob/main/docs/safety.md) are checked against. Calibrate against a
 meter — task `[2.17]` / `[H.10]`.
 
 ### Current sense — GPIO 35, routed but deferred
@@ -152,18 +181,28 @@ scale is at or under 3.3 V, fit `R3` as 1 kΩ and leave `R4` DNP; if it exceeds
 3.3 V, size `R3`/`R4` as a divider. Then calibrate volts-per-amp against a
 clamp meter. Until that happens, leave both unpopulated.
 
-### J8 — FC power switch (optional)
+### J8 — FC power switch, on `SHDN`
 
-A 1×2 header in the `BAT` net, downstream of `D1`/`C1` and upstream of both the
-regulator and the divider, so the whole board goes dead with no standby drain.
-Carries ~0.4 A at 16.8 V; any slide switch or a removable jumper suffices.
+A 1×2 header from `U1 SHDN` to `GND`. Closing it pulls `SHDN` low and shuts the
+regulator down; open, the regulator runs.
 
-Fit a jumper shunt here if you do not want a switch — the net must be closed
-for the board to power up.
+This is deliberately **not** a switch in the `BAT` path, which is where an
+earlier revision of this spec put it. Switching `SHDN` is signal-level — no
+current, no raw pack voltage on a mechanical contact that a crash can knock, and
+nothing in series with the supply to add resistance or fail open. Confirm from
+the datasheet that `SHDN` floats high (Pololu's boards pull it up internally, so
+an unfitted `J8` leaves the regulator enabled) before relying on the default.
+
+The trade is that `BAT` remains present on the board when it is switched off,
+so the divider keeps drawing its ~138 µA. Irrelevant beside a 4 S pack's
+self-discharge.
+
+Leave `J8` unfitted if you do not want a switch. Unlike a series jumper, nothing
+needs to be closed for the board to power up.
 
 **Silkscreen it `FC PWR — NOT A SAFETY DISCONNECT`.** It isn't one: the pack is
 still connected and the ESC bus is still live. See the power-states table in
-[hardware_roadmap.md](../../docs/hardware_roadmap.md).
+[hardware_roadmap.md](https://github.com/eli-lame/Revali/blob/main/docs/hardware_roadmap.md).
 
 ---
 
@@ -184,7 +223,7 @@ still connected and the ESC bus is still live. See the power-states table in
 Place `J3` **at the mounting-hole centroid** — the IMU belongs at the CG. The
 breakout solders directly to this header; soft-mount the whole board rather
 than the sensor. The SparkFun board's I2C/SPI jumper must be cut, per
-[hardware.md](../../docs/hardware.md).
+[hardware.md](https://github.com/eli-lame/Revali/blob/main/docs/hardware.md).
 
 ### J4 / J5 — ToF pair, I2C
 
@@ -198,7 +237,7 @@ than the sensor. The SparkFun board's I2C/SPI jumper must be cut, per
 
 Separate XSHUT lines per sensor are what make the boot address-assignment
 sequence possible — both sensors come up at `0x29` and the address does not
-persist. See [hardware.md](../../docs/hardware.md).
+persist. See [hardware.md](https://github.com/eli-lame/Revali/blob/main/docs/hardware.md).
 
 **Provide I2C pull-up footprints (`R5`, `R6`, 4.7 kΩ to 3V3) but leave them
 DNP.** The VL53L0X breakouts carry their own pull-ups; two breakouts already
@@ -324,7 +363,7 @@ GPIO number**, mark polarity on `C1` and `D2`, and put `REVALI STAGE 2 · rev A 
 ## Pin budget
 
 Every ESP32 pin this board uses, checked against the constraints in
-[hardware.md](../../docs/hardware.md):
+[hardware.md](https://github.com/eli-lame/Revali/blob/main/docs/hardware.md):
 
 | GPIO | Use | | GPIO | Use |
 |---|---|---|---|---|
@@ -364,7 +403,7 @@ Do not skip steps. Each one makes the next failure cheap.
 
 1. **Bare board, no parts.** Continuity check `BAT`–`GND` and `+5V`–`GND` for
    shorts. Verify `J1` pin 1 really is the pin you think it is.
-2. **Power section only** — `U1`, `D1`, `C1`–`C3`, `J8` jumper. Feed `BAT`
+2. **Power section only** — `U1`, `F1`, `D1`, `C1`–`C3`, `J8` left open. Feed `BAT`
    from a **current-limited bench supply at 12 V, limit 100 mA**, not a pack.
    Confirm 5 V out and no heating. Walk the supply up to 16.8 V.
 3. **Measure `+5V` at the devkit socket's VIN pin** before the devkit goes in.
@@ -443,4 +482,7 @@ saving is worth nothing here.
 - Frame clearance for the 44 × 56 mm outline.
 - Physical positions for `J4`/`J5` cable runs to the ToF mounts — the sensors
   go front-left and rear-right of the CG, as widely spaced as the frame allows.
-- Whether to fit `J8` at all, or jumper it permanently.
+- Whether to fit `J8` at all. With the switch on `SHDN` rather than in series,
+  leaving it unfitted is the do-nothing default.
+- `U1`'s physical pin order, from Pololu's dimension diagram, before the
+  footprint is drawn.
