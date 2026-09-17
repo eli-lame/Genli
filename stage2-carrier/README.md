@@ -78,7 +78,7 @@ single highest-value check in the whole process.
 | 5 | S3 | `ESC3` | GPIO 27 |
 | 6 | S4 | `ESC4` | GPIO 14 |
 | 7 | NC | — | leave unconnected |
-| 8 | CURR | `CURR` | GPIO 35, through the filter below |
+| 8 | CURR | — | **no-connect flag** — current sense is not fitted, see below |
 
 GPIO 32/33/27/14 are Motor 1/2/3/4 = front-left / front-right / rear-right /
 rear-left, matching the mixer. **Which physical motor the ESC's own output 1
@@ -156,30 +156,32 @@ number `warn_voltage` / `land_voltage` / `critical_voltage` in
 [safety.md](https://github.com/eli-lame/Revali/blob/main/docs/safety.md) are checked against. Calibrate against a
 meter — task `[2.17]` / `[H.10]`.
 
-### Current sense — GPIO 35, routed but deferred
+### Current sense — not fitted
 
-```
-J1.8 CURR ──[ R3 DNP ]──┬──[ C6 100 nF ]── GND
-                        ├──[ R4 DNP ]── GND     (divider leg, if needed)
-                        └── GPIO 35 (ADC1_CH7, input-only)
-```
+**`J1` pin 8 carries the KO50A's current-sense output and is deliberately left
+unconnected on this board.** No trace, no components, a no-connect flag on the
+connector pin. GPIO 35 stays free.
 
-**Current sensing is deliberately not being used on this board.** The trace and
-the footprints exist; `R3` is not populated, so the net is open and nothing
-reaches GPIO 35. There is nothing to measure, verify or calibrate at bring-up —
-skip it entirely.
+Voltage sensing is what the failsafe actually requires, and that is populated
+and working. Current sense would only buy joules-per-hop, which is a nice number
+for validating the efficiency premise but changes no in-flight decision.
 
-The reasoning matches the reserved ELRS footprint: one trace and two pads on a
-board being fabricated anyway, versus a respin if it turns out to be wanted.
-Voltage sensing — which the failsafe genuinely requires — is populated and
-working regardless.
+Two reasons not to route it speculatively. Skystars does not publish the KO50A's
+full-scale output voltage, and anything above 3.3 V destroys the pin — so a
+routed trace is a live hazard until someone measures it, which is work this
+board does not need. And the usual argument for reserving a footprint ("a trace
+now versus a respin later") does not apply here: Stage 3 is already a planned
+new board, so the respin exists regardless.
 
-**If it is enabled later**, two things have to happen first. Skystars does not
-publish the KO50A's full-scale output voltage, and anything above 3.3 V damages
-the ESP32 — so with props off, run the motors up and meter `J1.8`. If full
-scale is at or under 3.3 V, fit `R3` as 1 kΩ and leave `R4` DNP; if it exceeds
-3.3 V, size `R3`/`R4` as a divider. Then calibrate volts-per-amp against a
-clamp meter. Until that happens, leave both unpopulated.
+This differs from the reserved ELRS footprint on purpose. That one is four pads
+on a UART with a known, safe signal level. This one is an unquantified analog
+voltage straight onto an ADC pin.
+
+**If it is ever wanted**, on Stage 3: with props off, run the motors up and
+meter the ESC's current-sense pin first. If full scale is at or under 3.3 V a
+series resistor and a 100 nF filter suffice; above that it needs a divider.
+Then calibrate volts-per-amp against a clamp meter, the same way as the battery
+divider.
 
 ### J8 — FC power switch, on `SHDN`
 
@@ -375,12 +377,16 @@ Every ESP32 pin this board uses, checked against the constraints in
 | 17 | ELRS TX (reserved) | | 32 | ESC 1 |
 | 18 | IMU SCLK | | 33 | ESC 2 |
 | 19 | IMU MISO | | 34 | Battery sense (ADC1, in-only) |
-| 21 | I2C SDA | | 35 | Current sense (ADC1, in-only) |
+| 21 | I2C SDA | | 35 | *free* (in-only, ADC1) |
 
-Clear: 6–11 (flash), 1/3 (UART0 — the console and the bootloader), 12 and 15
-(strapping) are all unused. GPIO 2 is the onboard LED only. Both analog inputs
-are on **ADC1**, which is required because ADC2 is unusable whenever the WiFi
-radio is active — and with ESP-NOW it always is. GPIO 36 and 39 remain free.
+Clear: 6–11 (flash), 1/3 (UART0 — the console and the bootloader), and 12 are
+all unused. GPIO 2 is the onboard LED only. GPIO 15, 36 and 39 go to the spare
+header `J9`; 35 is free.
+
+The battery divider is on **ADC1**, which is required because ADC2 is unusable
+whenever the WiFi radio is active — and with ESP-NOW it always is. Any analog
+input added later must also land on ADC1: 35, 36 and 39 are the input-only
+ADC1 pins still available.
 
 ### J6 — ELRS, reserved
 
@@ -411,8 +417,7 @@ Do not skip steps. Each one makes the next failure cheap.
 4. **Devkit in.** Confirm 3V3, blink an LED, serial at 115200.
 5. **Sensors.** I2C scan, then the ToF address sequence, then the IMU. `[1.4]`,
    `[2.8]`.
-6. **Battery divider.** Calibrate against a meter. (Nothing to do for `CURR` —
-   it is unpopulated.)
+6. **Battery divider.** Calibrate against a meter.
 7. **ESC ribbon, props off.** Identify which physical motor each of S1–S4
    drives and record it. `[H.3]`.
 
@@ -440,7 +445,6 @@ there is nothing to think about. Either way: **props off.**
 | — | 10 µF 0805 (on +5V and +3V3) | 2 |
 | `R1` | 100 kΩ 1 % 0805 | 1 |
 | `R2` | 22 kΩ 1 % 0805 | 1 |
-| `R3`, `R4` | current sense — **both DNP**, deferred | 2 |
 | `R5`, `R6` | 4.7 kΩ I2C pull-ups — **DNP** | 2 |
 | `R7` | 100 Ω 0805 (buzzer gate) | 1 |
 | `R8` | 10 kΩ 0805 (buzzer gate pulldown) | 1 |
@@ -471,8 +475,8 @@ saving is worth nothing here.
   and the two analog inputs are what you least want coupling into.
 - **`BAT` traces:** 0.5 mm is generous for 0.4 A, but keep the clearance
   appropriate for 17 V, and keep the net physically short.
-- **Analog inputs:** run `GPIO 34` and `GPIO 35` as short traces with their
-  filter caps close to the devkit socket, over unbroken ground.
+- **Analog input:** run `GPIO 34` as a short trace with its filter cap close to
+  the devkit socket, over unbroken ground.
 - Silkscreen every connector with its pin 1 marker and signal names, and put
   the board revision and date on the bottom. You will thank yourself in
   November.
