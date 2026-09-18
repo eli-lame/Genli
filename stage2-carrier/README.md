@@ -282,17 +282,33 @@ frame — and keep those bundles away from the motor phase wires. At frame
 lengths (10–15 cm) I2C is comfortable; much longer and bus capacitance starts
 to matter.
 
-#### I2C pull-ups — verify before ordering
+#### VCC must be 3.3 V — this one can destroy the ESP32
 
-I2C does not work at all without pull-ups: devices only pull the lines *low*,
-and something must pull them back high.
+The breakouts carry an onboard regulator and a MOSFET level shifter, so `VIN`
+accepts 5 V happily. **Do not give it 5 V.** Their I2C pull-up resistors
+connect to `VIN` itself, so SDA and SCL sit at whatever `VIN` is — feed it 5 V
+and 5 V lands on GPIO 21 and 22, which are not 5 V tolerant.
 
-**Check whether the VL53L0X breakouts carry their own** (most do, usually
-10 kΩ). If they do, adding more on the carrier would over-load the bus.
+Put that on the silkscreen beside both connectors:
+`VCC = 3.3V ONLY — breakout pulls SDA/SCL to VIN`.
 
-Either way, **place `R5`/`R6` footprints, 4.7 kΩ to 3V3, marked DNP.** Two pad
-pairs, and it makes "the bus is dead" a soldering fix instead of a respin. This
-is a case where a reserved footprint genuinely earns its place.
+#### I2C pull-ups — footprints fitted, not populated
+
+Checked against the breakout schematic: each carrier has **10 kΩ** pull-ups on
+SDA and SCL. Two of them on one bus is ~5 kΩ in parallel, already in the normal
+range, so **`R5`/`R6` stay unpopulated.**
+
+Place the footprints anyway — 4.7 kΩ to 3V3, marked DNP. The reason is not
+"the bus might not work", which is now settled, but bus capacitance: the
+sensors sit on 10–15 cm of cable, and at 400 kHz I2C allows only 300 ns of rise
+time. 5 kΩ against that capacitance lands near 250 ns — fine, but without much
+margin. If the bus turns out unreliable at 400 kHz, fitting these two in
+parallel brings the total to ~2.4 kΩ and halves the rise time.
+
+The fallback, already in
+[hardware.md](https://github.com/eli-lame/Revali/blob/main/docs/hardware.md),
+is dropping the bus to 100 kHz, which allows 1000 ns and makes the question
+moot.
 
 ---
 
