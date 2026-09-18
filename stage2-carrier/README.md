@@ -49,7 +49,7 @@ scrap on arrival.
 
 Before ordering: **print the footprint 1:1 on paper and lay the physical devkit
 on top.** Check row spacing, pin count, and overall length. Do the same for the
-Pololu module and both JST connectors. This takes five minutes and is the
+Pololu module and the JST connector. This takes five minutes and is the
 single highest-value check in the whole process.
 
 ---
@@ -61,8 +61,8 @@ single highest-value check in the whole process.
 | `J1` | JST-SH 1.0 mm, 8-pin | ESC ribbon to the KO50A |
 | `J2` | 2 × 1×15 female header, 2.54 mm | ESP32 devkit socket |
 | `J3` | 1×7 header, 2.54 mm | IMU (ICM-20948 breakout) |
-| `J4` | JST-SH 1.0 mm, 5-pin | ToF A (front-left) |
-| `J5` | JST-SH 1.0 mm, 5-pin | ToF B (rear-right) |
+| `J4` | 1×6 header, 2.54 mm | ToF A (front-left) — sensor mounts at the frame |
+| `J5` | 1×6 header, 2.54 mm | ToF B (rear-right) — sensor mounts at the frame |
 | `J6` | JST-SH 1.0 mm, 4-pin | **ELRS / CRSF — reserved, unpopulated** |
 | `J7` | 1×2 header, 2.54 mm | Buzzer |
 | `J8` | 1×2 header, 2.54 mm | FC power switch on `U1 SHDN` — optional, see below |
@@ -229,25 +229,70 @@ than the sensor. The SparkFun board's I2C/SPI jumper must be cut, per
 
 ### J4 / J5 — ToF pair, I2C
 
+**1 × 6 through-hole header, 2.54 mm** — `PinHeader_1x06_P2.54mm_Vertical`.
+
 | Pin | Signal | ESP32 | J4 (ToF A) | J5 (ToF B) |
 |---|---|---|---|---|
-| 1 | 3V3 | — | | |
+| 1 | VCC (3V3) | — | | |
 | 2 | GND | — | | |
-| 3 | SDA | GPIO 21 | shared | shared |
-| 4 | SCL | GPIO 22 | shared | shared |
-| 5 | XSHUT | | GPIO 25 | GPIO 26 |
+| 3 | SCL | GPIO 22 | shared | shared |
+| 4 | SDA | GPIO 21 | shared | shared |
+| 5 | GPIO1 | — | no-connect | no-connect |
+| 6 | XSHUT | | GPIO 25 | GPIO 26 |
+
+**Six positions, not five.** The VL53L0X symbol has six pins, and every symbol
+pin needs a matching pad number — a 5-pad footprint fails with unmapped pins
+even though `GPIO1` is unused. Position 5 simply sits unconnected.
+
+Keep the `VL53L0X` symbol rather than a generic `Conn_01x06`: the pin names
+document what each wire is. Only the footprint field decides that this is a
+connector.
 
 Separate XSHUT lines per sensor are what make the boot address-assignment
 sequence possible — both sensors come up at `0x29` and the address does not
 persist. See [hardware.md](https://github.com/eli-lame/Revali/blob/main/docs/hardware.md).
 
-**Provide I2C pull-up footprints (`R5`, `R6`, 4.7 kΩ to 3V3) but leave them
-DNP.** The VL53L0X breakouts carry their own pull-ups; two breakouts already
-put two sets in parallel, and adding a third would over-drive the bus. The
-footprints exist for the day the sensors are bare chips.
-
 XSHUT is not 5 V tolerant and has an internal pull-up. Drive it directly from
 the GPIO.
+
+#### The sensors mount at the frame, not on this board
+
+This is the whole reason these are connectors. The estimator turns the
+*difference* between the two ranges into a ground slope, so the sensors go
+front-left and rear-right of the CG, as widely spaced as the frame allows, each
+with a clear 25° cone below it. Two sensors a few centimetres apart in the
+middle of the stack measure nothing useful.
+
+**Strain-relieve every cable.** Put two Ø2 mm holes beside each connector for a
+zip-tie. Without it the wire flexes at the solder joint on every landing until
+the joint cracks, and that failure is *intermittent* — a ToF that drops out
+mid-hop produces garbage the estimator cannot distinguish from a real reading.
+
+On connector choice, for a vehicle whose purpose is repeated impact: plain
+2.54 mm header plus Dupont sockets is the easiest to wire and the least secure,
+since Dupont housings walk loose under vibration. Acceptable for bring-up **if
+the joint is actually glued or tied**. Soldering the wires straight into the
+through-holes is more secure and less reworkable; a latching JST-GH housing is
+the proper answer if a crimp tool is available. The 1 × 6 footprint supports
+all three.
+
+Run each sensor's wires as a single bundle **including its ground return** —
+the return has to travel with the signals, not find its own path through the
+frame — and keep those bundles away from the motor phase wires. At frame
+lengths (10–15 cm) I2C is comfortable; much longer and bus capacitance starts
+to matter.
+
+#### I2C pull-ups — verify before ordering
+
+I2C does not work at all without pull-ups: devices only pull the lines *low*,
+and something must pull them back high.
+
+**Check whether the VL53L0X breakouts carry their own** (most do, usually
+10 kΩ). If they do, adding more on the carrier would over-load the bus.
+
+Either way, **place `R5`/`R6` footprints, 4.7 kΩ to 3V3, marked DNP.** Two pad
+pairs, and it makes "the bus is dead" a soldering fix instead of a respin. This
+is a case where a reserved footprint genuinely earns its place.
 
 ---
 
@@ -455,7 +500,7 @@ there is nothing to think about. Either way: **props off.**
 | `J1` | JST-SH 1.0 mm 8-pin, SMD | 1 |
 | `J2` | 1×15 female header 2.54 mm | 2 |
 | `J3` | 1×7 male header 2.54 mm | 1 |
-| `J4`, `J5` | JST-SH 1.0 mm 5-pin, SMD | 2 |
+| `J4`, `J5` | 1×6 male header 2.54 mm | 2 |
 | `J6` | JST-SH 1.0 mm 4-pin, SMD | 1 |
 | `J7`, `J8` | 1×2 male header 2.54 mm | 2 |
 | `J9` | 1×4 male header 2.54 mm, spare GPIO | 1 |
