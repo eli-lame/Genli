@@ -107,13 +107,36 @@ J1.2 BAT ──┬── F1 ──┬── D1 (TVS) ──┬── C1 ──�
 | Ref | Part | Notes |
 |---|---|---|
 | `U1` | Pololu D24V10F5 | 5.1–36 V in, 5 V @ 1 A. **Five pins** — `VIN`, `GND`, `VOUT`, `SHDN`, `PG` at 0.1″ spacing. Board is 18 × 13 × 3.5 mm with no mounting holes. Solder **flat** through the pads, not into headers — a socketed module works loose under impact. Stake with epoxy |
-| `D1` | SMBJ20A TVS | 20 V standoff (clear of 16.8 V full charge), ~32 V clamp — under the Pololu's 36 V limit. **4 S only**; 6 S would sit above the standoff voltage |
+| `D1` | **SMBJ20CA** TVS (bidirectional) | 20 V standoff (clear of 16.8 V full charge), ~32 V clamp — under the Pololu's 36 V limit. **4 S only**; 6 S would sit above the standoff voltage. Bidirectional, so it has no polarity and cannot be fitted backwards — see below |
 | `C1` | 100 µF 35 V low-ESR electrolytic | Pololu's own docs warn that leads longer than a few inches create an LC spike at power-up that can exceed the module's rating. The ribbon plus trace run qualifies. Add `C2` 100 nF ceramic beside it |
 | `C3` | 10 µF + 100 nF on `+5V` | |
 | `C4` | 10 µF + 100 nF on `+3V3` | Plus 100 nF at each sensor connector |
 
 Nothing else connects to `BAT`. It is 16.8 V at full charge and **must never
 reach the devkit's `VIN` pin**, whose AMS1117 is rated to roughly 15 V.
+
+### Why the TVS is bidirectional
+
+`SMBJ20CA` rather than the unidirectional `SMBJ20A`. Same package, same price,
+same clamping behaviour for the positive transients this board actually sees —
+and with no polarity, it cannot be soldered backwards.
+
+That matters because a *reversed* unidirectional TVS is forward-biased across
+the supply at ~0.7 V. It is a permanent short on the battery, it looks like a
+dead board, and there is nothing on the silkscreen to distinguish a correctly
+fitted part from a reversed one once it is soldered. Removing that failure mode
+is worth more here than what the unidirectional part buys.
+
+What the unidirectional part would have bought: together with `F1` it forms an
+accidental reverse-polarity protection — swap `BAT` and `GND` and the TVS
+conducts, blowing the fuse and saving the board. With `J1` keyed, reverse
+polarity at the connector is already close to impossible, so that benefit is
+largely theoretical.
+
+KiCad's `Device:D_TVS` symbol is already the bidirectional one, so no schematic
+change is needed. The `Diode_SMD:D_SMB` footprint carries a cathode band on its
+silkscreen; on a bidirectional part that marking means nothing. Harmless, but
+worth knowing before someone at assembly tries to orient it.
 
 ### The regulator's own symbol and footprint
 
@@ -497,7 +520,7 @@ there is nothing to think about. Either way: **props off.**
 | Ref | Part | Qty |
 |---|---|---|
 | `U1` | Pololu D24V10F5 | 1 |
-| `D1` | SMBJ20A TVS, SMB | 1 |
+| `D1` | SMBJ20CA TVS (bidirectional), SMB | 1 |
 | `D2` | LED, 0805 | 1 |
 | `D3` | 1N4148 (magnetic buzzer only) | 1 |
 | `Q1` | 2N7002 N-MOSFET, SOT-23 | 1 |
