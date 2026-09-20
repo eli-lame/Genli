@@ -64,6 +64,7 @@ single highest-value check in the whole process.
 | `J4` | 1×6 header, 2.54 mm | ToF A (front-left) — sensor mounts at the frame |
 | `J5` | 1×6 header, 2.54 mm | ToF B (rear-right) — sensor mounts at the frame |
 | `J6` | 1×4 header, 2.54 mm | **ELRS / CRSF — reserved, unpopulated** |
+| `J7` | 1×2 header, 2.54 mm | Buzzer — passive piezo, mounts off-board |
 | `J8` | 1×2 header, 2.54 mm | FC power switch on `U1 SHDN` — optional, see below |
 
 ### J1 — ESC ribbon (KO50A)
@@ -335,27 +336,38 @@ moot.
 
 ## Remaining circuits
 
-### No buzzer on this board
+### Buzzer — GPIO 13
 
-GPIO 13 is reserved for one in
-[hardware.md](https://github.com/eli-lame/Revali/blob/main/docs/hardware.md) but
-nothing is fitted here — it was cut to free routing space, and it is the
-cheapest thing on the board to add back.
+```
+GPIO 13 ──[ R 100 Ω ]──[ BZ1 piezo ]── GND
+```
 
-What it would have provided is audible arming feedback: knowing whether the
-motors are live while picking the vehicle up between hops, without looking at a
-screen. **The status LED now carries that job alone**, so firmware should make
-its arm/disarm states unambiguous rather than subtle.
+Two parts, no transistor. A **passive** piezo transducer — sold as "passive
+buzzer" or "external drive", *not* the active kind with a built-in oscillator —
+is essentially a capacitor and draws almost no current, so a GPIO drives it
+directly. The 100 Ω limits the inrush into that capacitance.
 
-If it turns out to be wanted, a passive piezo needs no circuitry — GPIO 13
-through a 100 Ω resistor, driven with PWM near 4 kHz. The devkit pin is
-accessible at its socket pad, so it is a two-wire bodge rather than a revision.
+Standard parts: TDK **PS1240P02BT** or Murata **PKM13EPYH4000-A0**. What matters
+when substituting: passive/external-drive, two leads, resonant near 4 kHz — that
+is both where the element is loudest and where human hearing is most sensitive.
+A passive piezo is non-polarised, so orientation is irrelevant.
+
+**`J7` is a 1×2 header; the piezo mounts off-board on wires.** Buried under the
+devkit in the middle of a stack it is muffled — put it somewhere audible on the
+frame, and give it the same zip-tie strain relief as the ToF cables.
+
+Firmware drives it with PWM (LEDC) near 4 kHz. A passive piezo makes no sound
+from a DC level.
+
+Its job is **audible arming feedback** — knowing whether the motors are live
+while picking the vehicle up between hops, without looking at a screen. The
+status LED on GPIO 2 is the visual half of the same signal.
 
 ### Status LED — GPIO 2
 
 Onboard on the devkit. No external part. Do not load GPIO 2 with anything else
-— it is a strapping pin. With no buzzer fitted, this is the **only** local
-indication of arming state.
+— it is a strapping pin. It is the visual half of the arming indication, with
+the buzzer as the audible half.
 
 ### Power LED
 
@@ -456,7 +468,7 @@ Every ESP32 pin this board uses, checked against the constraints in
 |---|---|---|---|---|
 | 4 | IMU INT | | 22 | I2C SCL |
 | 5 | IMU CS | | 23 | IMU MOSI |
-| 13 | *free* (buzzer, not fitted) | | 25 | ToF A XSHUT |
+| 13 | Buzzer | | 25 | ToF A XSHUT |
 | 14 | ESC 4 | | 26 | ToF B XSHUT |
 | 16 | ELRS **TX** (reserved) | | 27 | ESC 3 |
 | 17 | ELRS **RX** (reserved) | | 32 | ESC 1 |
@@ -530,6 +542,8 @@ there is nothing to think about. Either way: **props off.**
 | `R2` | 22 kΩ 1 % 0805 | 1 |
 | `R5`, `R6` | 4.7 kΩ I2C pull-ups — **DNP** | 2 |
 | `R9` | 1 kΩ 0805 (power LED) | 1 |
+| — | 100 Ω 0805 (buzzer series) | 1 |
+| `BZ1` | passive piezo, off-board on wires | 1 |
 | `R10`–`R13` | 100 Ω 0805, ESC signal series | 4 |
 | `F1` | PPTC 0.5 A hold, 1206 | 1 |
 | — | Test points, 1 mm exposed pad | 8 |
@@ -538,7 +552,7 @@ there is nothing to think about. Either way: **props off.**
 | `J3` | 1×7 male header 2.54 mm | 1 |
 | `J4`, `J5` | 1×6 male header 2.54 mm | 2 |
 | `J6` | 1×4 male header 2.54 mm | 1 |
-| `J8` | 1×2 male header 2.54 mm | 1 |
+| `J7`, `J8` | 1×2 male header 2.54 mm | 2 |
 | `J9` | 1×4 male header 2.54 mm, spare GPIO | 1 |
 
 0805 throughout rather than 0402 — this board is hand-soldered, and the space
