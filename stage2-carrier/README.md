@@ -242,7 +242,7 @@ still connected and the ESC bus is still live. See the power-states table in
 | 4 | MISO | GPIO 19 |
 | 5 | MOSI | GPIO 23 |
 | 6 | CS | GPIO 5 |
-| 7 | INT | GPIO 4 |
+| 7 | INT | GPIO 35 |
 
 Place `J3` **at the mounting-hole centroid** — the IMU belongs at the CG. The
 breakout solders directly to this header; soft-mount the whole board rather
@@ -466,7 +466,7 @@ Every ESP32 pin this board uses, checked against the constraints in
 
 | GPIO | Use | | GPIO | Use |
 |---|---|---|---|---|
-| 4 | IMU INT | | 22 | I2C SCL |
+| 4 | *free* (full-function) | | 22 | I2C SCL |
 | 5 | IMU CS | | 23 | IMU MOSI |
 | 13 | Buzzer | | 25 | ToF A XSHUT |
 | 14 | ESC 4 | | 26 | ToF B XSHUT |
@@ -474,11 +474,22 @@ Every ESP32 pin this board uses, checked against the constraints in
 | 17 | ELRS **RX** (reserved) | | 32 | ESC 1 |
 | 18 | IMU SCLK | | 33 | ESC 2 |
 | 19 | IMU MISO | | 34 | Battery sense (ADC1, in-only) |
-| 21 | I2C SDA | | 35 | *free* (in-only, ADC1) |
+| 21 | I2C SDA | | 35 | IMU INT (in-only) |
 
 Clear: 6–11 (flash), 1/3 (UART0 — the console and the bootloader), and 12 are
 all unused. GPIO 2 is the onboard LED only. GPIO 15, 36 and 39 go to the spare
 header `J9`; 35 is free.
+
+**IMU INT is on GPIO 35**, one of the input-only pins, which frees GPIO 4 as a
+full-function pin. The interrupt line is only ever an input, so spending an
+input-only pin on it costs nothing.
+
+The catch is that GPIO 34–39 have **no internal pull-up or pull-down**, and it
+is not configurable. That is fine while the ICM-20948's INT output stays
+push-pull (its default) — but there is no pad on this board for the external
+pull-up an open-drain configuration would need, so do not reconfigure it. The
+pin also floats until the IMU initialises, so firmware must attach the
+interrupt handler *after* init rather than before.
 
 The battery divider is on **ADC1**, which is required because ADC2 is unusable
 whenever the WiFi radio is active — and with ESP-NOW it always is. Any analog
