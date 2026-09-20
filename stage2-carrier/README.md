@@ -63,8 +63,7 @@ single highest-value check in the whole process.
 | `J3` | 1×7 header, 2.54 mm | IMU (ICM-20948 breakout) |
 | `J4` | 1×6 header, 2.54 mm | ToF A (front-left) — sensor mounts at the frame |
 | `J5` | 1×6 header, 2.54 mm | ToF B (rear-right) — sensor mounts at the frame |
-| `J6` | JST-SH 1.0 mm, 4-pin | **ELRS / CRSF — reserved, unpopulated** |
-| `J7` | 1×2 header, 2.54 mm | Buzzer |
+| `J6` | 1×4 header, 2.54 mm | **ELRS / CRSF — reserved, unpopulated** |
 | `J8` | 1×2 header, 2.54 mm | FC power switch on `U1 SHDN` — optional, see below |
 
 ### J1 — ESC ribbon (KO50A)
@@ -100,7 +99,6 @@ J1.2 BAT ──┬── F1 ──┬── D1 (TVS) ──┬── C1 ──�
 
   +5V ──┬── devkit VIN ── (devkit AMS1117) ── +3V3 ── IMU, ToF ×2
         ├── J6.1 (ELRS, reserved)
-        ├── buzzer circuit
         └── D2 power LED
 ```
 
@@ -337,24 +335,27 @@ moot.
 
 ## Remaining circuits
 
-### Buzzer — GPIO 13
+### No buzzer on this board
 
-An active 5 V buzzer draws more than a GPIO can source, so switch it:
+GPIO 13 is reserved for one in
+[hardware.md](https://github.com/eli-lame/Revali/blob/main/docs/hardware.md) but
+nothing is fitted here — it was cut to free routing space, and it is the
+cheapest thing on the board to add back.
 
-```
-GPIO 13 ──[ R7 100 Ω ]── gate, Q1 (2N7002)
-                          ├── R8 10 kΩ gate→GND   (holds it off during boot)
-         +5V ── buzzer ── drain
-                  └── D3 1N4148 flyback, if the buzzer is magnetic
-```
+What it would have provided is audible arming feedback: knowing whether the
+motors are live while picking the vehicle up between hops, without looking at a
+screen. **The status LED now carries that job alone**, so firmware should make
+its arm/disarm states unambiguous rather than subtle.
 
-`R8` matters: without it the gate floats while the ESP32 boots and the buzzer
-can chirp or latch on at power-up.
+If it turns out to be wanted, a passive piezo needs no circuitry — GPIO 13
+through a 100 Ω resistor, driven with PWM near 4 kHz. The devkit pin is
+accessible at its socket pad, so it is a two-wire bodge rather than a revision.
 
 ### Status LED — GPIO 2
 
 Onboard on the devkit. No external part. Do not load GPIO 2 with anything else
-— it is a strapping pin.
+— it is a strapping pin. With no buzzer fitted, this is the **only** local
+indication of arming state.
 
 ### Power LED
 
@@ -455,10 +456,10 @@ Every ESP32 pin this board uses, checked against the constraints in
 |---|---|---|---|---|
 | 4 | IMU INT | | 22 | I2C SCL |
 | 5 | IMU CS | | 23 | IMU MOSI |
-| 13 | Buzzer | | 25 | ToF A XSHUT |
+| 13 | *free* (buzzer, not fitted) | | 25 | ToF A XSHUT |
 | 14 | ESC 4 | | 26 | ToF B XSHUT |
-| 16 | ELRS RX (reserved) | | 27 | ESC 3 |
-| 17 | ELRS TX (reserved) | | 32 | ESC 1 |
+| 16 | ELRS **TX** (reserved) | | 27 | ESC 3 |
+| 17 | ELRS **RX** (reserved) | | 32 | ESC 1 |
 | 18 | IMU SCLK | | 33 | ESC 2 |
 | 19 | IMU MISO | | 34 | Battery sense (ADC1, in-only) |
 | 21 | I2C SDA | | 35 | *free* (in-only, ADC1) |
@@ -478,8 +479,8 @@ ADC1 pins still available.
 |---|---|---|
 | 1 | +5V | — |
 | 2 | GND | — |
-| 3 | TX (to RX on the receiver) | GPIO 17 |
-| 4 | RX (from TX on the receiver) | GPIO 16 |
+| 3 | TX (to RX on the receiver) | GPIO 16 |
+| 4 | RX (from TX on the receiver) | GPIO 17 |
 
 Routed and unpopulated. Stage 2 flies on ESP-NOW; this exists so that adopting
 ELRS later is a firmware change rather than a board respin. Note the crossover
@@ -522,16 +523,12 @@ there is nothing to think about. Either way: **props off.**
 | `U1` | Pololu D24V10F5 | 1 |
 | `D1` | SMBJ20CA TVS (bidirectional), SMB | 1 |
 | `D2` | LED, 0805 | 1 |
-| `D3` | 1N4148 (magnetic buzzer only) | 1 |
-| `Q1` | 2N7002 N-MOSFET, SOT-23 | 1 |
 | `C1` | 100 µF 35 V low-ESR electrolytic | 1 |
 | `C2`–`C6` | 100 nF 0805 | 5 |
 | — | 10 µF 0805 (on +5V and +3V3) | 2 |
 | `R1` | 100 kΩ 1 % 0805 | 1 |
 | `R2` | 22 kΩ 1 % 0805 | 1 |
 | `R5`, `R6` | 4.7 kΩ I2C pull-ups — **DNP** | 2 |
-| `R7` | 100 Ω 0805 (buzzer gate) | 1 |
-| `R8` | 10 kΩ 0805 (buzzer gate pulldown) | 1 |
 | `R9` | 1 kΩ 0805 (power LED) | 1 |
 | `R10`–`R13` | 100 Ω 0805, ESC signal series | 4 |
 | `F1` | PPTC 0.5 A hold, 1206 | 1 |
@@ -540,8 +537,8 @@ there is nothing to think about. Either way: **props off.**
 | `J2` | 1×15 female header 2.54 mm | 2 |
 | `J3` | 1×7 male header 2.54 mm | 1 |
 | `J4`, `J5` | 1×6 male header 2.54 mm | 2 |
-| `J6` | JST-SH 1.0 mm 4-pin, SMD | 1 |
-| `J7`, `J8` | 1×2 male header 2.54 mm | 2 |
+| `J6` | 1×4 male header 2.54 mm | 1 |
+| `J8` | 1×2 male header 2.54 mm | 1 |
 | `J9` | 1×4 male header 2.54 mm, spare GPIO | 1 |
 
 0805 throughout rather than 0402 — this board is hand-soldered, and the space
