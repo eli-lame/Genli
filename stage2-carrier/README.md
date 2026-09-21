@@ -238,10 +238,10 @@ still connected and the ESC bus is still live. See the power-states table in
 |---|---|---|
 | 1 | 3V3 | — |
 | 2 | GND | — |
-| 3 | SCLK | GPIO 19 |
+| 3 | SCLK | GPIO 23 |
 | 4 | MISO | GPIO 25 |
-| 5 | MOSI | GPIO 23 |
-| 6 | CS | GPIO 5 |
+| 5 | MOSI | GPIO 19 |
+| 6 | CS | GPIO 15 |
 | 7 | INT | GPIO 35 |
 
 Place `J3` **at the mounting-hole centroid** — the IMU belongs at the CG. The
@@ -257,8 +257,8 @@ than the sensor. The SparkFun board's I2C/SPI jumper must be cut, per
 |---|---|---|---|---|
 | 1 | VCC (3V3) | — | | |
 | 2 | GND | — | | |
-| 3 | SCL | GPIO 22 | shared | shared |
-| 4 | SDA | GPIO 21 | shared | shared |
+| 3 | SCL | GPIO 21 | shared | shared |
+| 4 | SDA | GPIO 22 | shared | shared |
 | 5 | GPIO1 | — | no-connect | no-connect |
 | 6 | XSHUT | | GPIO 18 | GPIO 26 |
 
@@ -466,35 +466,50 @@ Every ESP32 pin this board uses, checked against the constraints in
 
 | GPIO | Use | | GPIO | Use |
 |---|---|---|---|---|
-| 4 | *free* (full-function) | | 22 | I2C SCL |
-| 5 | IMU CS | | 23 | IMU MOSI |
-| 13 | Buzzer | | 25 | IMU MISO |
-| 14 | ESC 4 | | 26 | ToF B XSHUT |
+| 4 | *free* (full-function) | | 21 | I2C SCL |
+| 5 | *free* (full-function) | | 22 | I2C SDA |
+| 13 | Buzzer | | 23 | IMU SCLK |
+| 14 | ESC 4 | | 25 | IMU MISO |
+| 15 | IMU CS | | 26 | ToF B XSHUT |
 | 16 | ELRS **TX** (reserved) | | 27 | ESC 3 |
 | 17 | ELRS **RX** (reserved) | | 32 | ESC 1 |
 | 18 | ToF A XSHUT | | 33 | ESC 2 |
-| 19 | IMU SCLK | | 34 | Battery sense (ADC1, in-only) |
-| 21 | I2C SDA | | 35 | IMU INT (in-only) |
+| 19 | IMU MOSI | | 34 | Battery sense (ADC1, in-only) |
+| | | | 35 | IMU INT (in-only) |
 
 Clear: 6–11 (flash), 1/3 (UART0 — the console and the bootloader), and 12 are
-all unused. GPIO 2 is the onboard LED only. GPIO 15, 36 and 39 go to the spare
-header `J9`; 35 is free.
+all unused. GPIO 2 is the onboard LED only. Free and available: **4 and 5**
+(full-function), **36 and 39** (input-only, ADC1).
 
-**SCLK is on GPIO 19 and MISO on GPIO 25 — both off their VSPI defaults.** The
-first swap moved SCLK off GPIO 18 so the two XSHUT lines could land on opposite
-pin rows, matching `J4` and `J5` sitting on opposite edges of the board; the
-second traded SCLK and MISO for routing.
+**Every SPI pin and both I2C pins are off their framework defaults.** These
+assignments came out of routing this board — the first move was taking SCLK off
+GPIO 18 so the two XSHUT lines could sit on opposite pin rows, matching `J4` and
+`J5` being on opposite edges; the rest followed.
 
-Firmware must name the SPI pins explicitly — `SPI.begin(19, 25, 23, 5)`. Note
-the order: **19 is the clock, 25 is MISO.** Transposing them puts the clock on
-the IMU's data-out line and it never answers. A bare `SPI.begin()` is worse — it
-would drive GPIO 18, which now resets a ToF.
+Firmware must name them all explicitly:
 
-Cost of the swap is nil: non-default pins route through the GPIO matrix instead
-of the IOMUX, capping SPI at 40 MHz rather than 80 and adding ~25 ns of MISO
-input delay. This bus runs at 7 MHz.
+```cpp
+SPI.begin(23, 25, 19, 15);   // sck, miso, mosi, ss
+Wire.begin(22, 21);          // sda, scl
+```
 
-Layout consequence: the clock is now separated from MISO, MOSI and CS. Skew at
+A bare `SPI.begin()` would drive GPIO 18 as the clock — which now resets a ToF
+— and a bare `Wire.begin()` has SDA and SCL crossed relative to this board.
+Neither errors; the sensors simply never answer, which reads as dead hardware.
+Watch the argument orders too: **sck, miso, mosi, ss** and **sda, scl**.
+
+Cost is nil. Non-default pins route through the GPIO matrix instead of the
+IOMUX, capping SPI at 40 MHz rather than 80 and adding ~25 ns of MISO input
+delay; this bus runs at 7 MHz. It is all-or-nothing, so once one signal is off
+its default, moving the rest is free. I2C has no preferred pins at all.
+
+**CS on GPIO 15 is deliberate.** That pin is a strapping pin needing to be high
+at boot, and it has an internal pull-up. SPI chip-select is active-low, so the
+pull-up holds the IMU deselected through reset and before firmware configures
+the pin — the safe state — while satisfying the strapping requirement as a side
+effect. **Never add anything that pulls GPIO 15 low at boot.**
+
+Layout consequence: the clock is separated from MISO, MOSI and CS. Skew at
 7 MHz is a fraction of a nanosecond against a 71 ns half-period, so it is
 harmless — but do not run SCLK closely parallel to an ESC signal, since both are
 high-activity lines. Cross at right angles.
