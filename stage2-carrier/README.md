@@ -238,8 +238,8 @@ still connected and the ESC bus is still live. See the power-states table in
 |---|---|---|
 | 1 | 3V3 | — |
 | 2 | GND | — |
-| 3 | SCLK | GPIO 25 |
-| 4 | MISO | GPIO 19 |
+| 3 | SCLK | GPIO 19 |
+| 4 | MISO | GPIO 25 |
 | 5 | MOSI | GPIO 23 |
 | 6 | CS | GPIO 5 |
 | 7 | INT | GPIO 35 |
@@ -468,25 +468,27 @@ Every ESP32 pin this board uses, checked against the constraints in
 |---|---|---|---|---|
 | 4 | *free* (full-function) | | 22 | I2C SCL |
 | 5 | IMU CS | | 23 | IMU MOSI |
-| 13 | Buzzer | | 25 | IMU SCLK |
+| 13 | Buzzer | | 25 | IMU MISO |
 | 14 | ESC 4 | | 26 | ToF B XSHUT |
 | 16 | ELRS **TX** (reserved) | | 27 | ESC 3 |
 | 17 | ELRS **RX** (reserved) | | 32 | ESC 1 |
 | 18 | ToF A XSHUT | | 33 | ESC 2 |
-| 19 | IMU MISO | | 34 | Battery sense (ADC1, in-only) |
+| 19 | IMU SCLK | | 34 | Battery sense (ADC1, in-only) |
 | 21 | I2C SDA | | 35 | IMU INT (in-only) |
 
 Clear: 6–11 (flash), 1/3 (UART0 — the console and the bootloader), and 12 are
 all unused. GPIO 2 is the onboard LED only. GPIO 15, 36 and 39 go to the spare
 header `J9`; 35 is free.
 
-**SCLK is on GPIO 25, not the VSPI default.** It was swapped with ToF A's XSHUT
-so the two XSHUT lines land on opposite pin rows, matching `J4` and `J5` sitting
-on opposite edges of the board.
+**SCLK is on GPIO 19 and MISO on GPIO 25 — both off their VSPI defaults.** The
+first swap moved SCLK off GPIO 18 so the two XSHUT lines could land on opposite
+pin rows, matching `J4` and `J5` sitting on opposite edges of the board; the
+second traded SCLK and MISO for routing.
 
-Firmware must therefore name the SPI pins explicitly — `SPI.begin(25, 19, 23, 5)`
-— because a bare `SPI.begin()` would drive GPIO 18, which is now a ToF reset
-line. The IMU would simply never answer.
+Firmware must name the SPI pins explicitly — `SPI.begin(19, 25, 23, 5)`. Note
+the order: **19 is the clock, 25 is MISO.** Transposing them puts the clock on
+the IMU's data-out line and it never answers. A bare `SPI.begin()` is worse — it
+would drive GPIO 18, which now resets a ToF.
 
 Cost of the swap is nil: non-default pins route through the GPIO matrix instead
 of the IOMUX, capping SPI at 40 MHz rather than 80 and adding ~25 ns of MISO
