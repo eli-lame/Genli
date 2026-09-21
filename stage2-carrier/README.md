@@ -238,7 +238,7 @@ still connected and the ESC bus is still live. See the power-states table in
 |---|---|---|
 | 1 | 3V3 | — |
 | 2 | GND | — |
-| 3 | SCLK | GPIO 18 |
+| 3 | SCLK | GPIO 25 |
 | 4 | MISO | GPIO 19 |
 | 5 | MOSI | GPIO 23 |
 | 6 | CS | GPIO 5 |
@@ -260,7 +260,7 @@ than the sensor. The SparkFun board's I2C/SPI jumper must be cut, per
 | 3 | SCL | GPIO 22 | shared | shared |
 | 4 | SDA | GPIO 21 | shared | shared |
 | 5 | GPIO1 | — | no-connect | no-connect |
-| 6 | XSHUT | | GPIO 25 | GPIO 26 |
+| 6 | XSHUT | | GPIO 18 | GPIO 26 |
 
 **Six positions, not five.** The VL53L0X symbol has six pins, and every symbol
 pin needs a matching pad number — a 5-pad footprint fails with unmapped pins
@@ -468,17 +468,34 @@ Every ESP32 pin this board uses, checked against the constraints in
 |---|---|---|---|---|
 | 4 | *free* (full-function) | | 22 | I2C SCL |
 | 5 | IMU CS | | 23 | IMU MOSI |
-| 13 | Buzzer | | 25 | ToF A XSHUT |
+| 13 | Buzzer | | 25 | IMU SCLK |
 | 14 | ESC 4 | | 26 | ToF B XSHUT |
 | 16 | ELRS **TX** (reserved) | | 27 | ESC 3 |
 | 17 | ELRS **RX** (reserved) | | 32 | ESC 1 |
-| 18 | IMU SCLK | | 33 | ESC 2 |
+| 18 | ToF A XSHUT | | 33 | ESC 2 |
 | 19 | IMU MISO | | 34 | Battery sense (ADC1, in-only) |
 | 21 | I2C SDA | | 35 | IMU INT (in-only) |
 
 Clear: 6–11 (flash), 1/3 (UART0 — the console and the bootloader), and 12 are
 all unused. GPIO 2 is the onboard LED only. GPIO 15, 36 and 39 go to the spare
 header `J9`; 35 is free.
+
+**SCLK is on GPIO 25, not the VSPI default.** It was swapped with ToF A's XSHUT
+so the two XSHUT lines land on opposite pin rows, matching `J4` and `J5` sitting
+on opposite edges of the board.
+
+Firmware must therefore name the SPI pins explicitly — `SPI.begin(25, 19, 23, 5)`
+— because a bare `SPI.begin()` would drive GPIO 18, which is now a ToF reset
+line. The IMU would simply never answer.
+
+Cost of the swap is nil: non-default pins route through the GPIO matrix instead
+of the IOMUX, capping SPI at 40 MHz rather than 80 and adding ~25 ns of MISO
+input delay. This bus runs at 7 MHz.
+
+Layout consequence: the clock is now separated from MISO, MOSI and CS. Skew at
+7 MHz is a fraction of a nanosecond against a 71 ns half-period, so it is
+harmless — but do not run SCLK closely parallel to an ESC signal, since both are
+high-activity lines. Cross at right angles.
 
 **IMU INT is on GPIO 35**, one of the input-only pins, which frees GPIO 4 as a
 full-function pin. The interrupt line is only ever an input, so spending an
